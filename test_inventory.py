@@ -6,24 +6,21 @@ from selenium.webdriver.support import expected_conditions as EC
 
 def test_inventory():
     driver = webdriver.Chrome()
-    driver.implicitly_wait (10)
 
     wait = WebDriverWait (driver, 10)
 
     try:
+        #login
         driver.get ("https://www.saucedemo.com/")
-        
-        usuario = wait.until(EC.presence_of_element_located((By.ID, "user-name")))
-        password = wait.until(EC.presence_of_element_located((By.ID, "password")))
-        boton_login = wait.until (EC.element_to_be_clickable((By.ID, "login-button")))
 
-        usuario.send_keys ("standard_user")
-        password.send_keys ("secret_sauce")
-        boton_login.click()
+        wait.until(EC.visibility_of_element_located((By.ID, "user-name"))).send_keys ("standard_user")
+        wait.until(EC.visibility_of_element_located((By.ID, "password"))).send_keys ("secret_sauce")
+        wait.until (EC.element_to_be_clickable((By.ID, "login-button"))).click()
 
+        #validaciones
         assert driver.title == "Swag Labs"
 
-        productos = driver.find_elements (By.CLASS_NAME, "inventory_item")
+        productos = wait.until(EC.presence_of_all_elements_located((By.CLASS_NAME, "inventory_item")))
         assert len(productos) > 0
 
         primer_producto = productos[0]

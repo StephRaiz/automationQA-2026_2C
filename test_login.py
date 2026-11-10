@@ -6,21 +6,18 @@ from selenium.webdriver.support import expected_conditions as EC
 
 def test_login_exitoso():
     driver = webdriver.Chrome()
-    driver.implicitly_wait (10)
 
     wait = WebDriverWait (driver, 10)
 
     try:
+        #login
         driver.get ("https://www.saucedemo.com/")
 
-        usuario = wait.until(EC.presence_of_element_located((By.ID, "user-name")))
-        password = wait.until(EC.presence_of_element_located((By.ID, "password")))
-        boton_login = wait.until (EC.element_to_be_clickable((By.ID, "login-button")))
+        wait.until(EC.visibility_of_element_located((By.ID, "user-name"))).send_keys ("standard_user")
+        wait.until(EC.visibility_of_element_located((By.ID, "password"))).send_keys ("secret_sauce")
+        wait.until (EC.element_to_be_clickable((By.ID, "login-button"))).click()
 
-        usuario.send_keys ("standard_user")
-        password.send_keys ("secret_sauce")
-        boton_login.click()
-
+        #validaciones
         assert "/inventory.html" in driver.current_url
 
         logo = driver.find_element (By.CLASS_NAME, "app_logo")
